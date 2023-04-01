@@ -1,14 +1,15 @@
-const apiKey = '6y_Q8qP-ct_RoL98Plgpz5EPef3UryOuLxG-PNT4Uv2XcaJO38q8XStqbglMoQHDE85jS-DHMvOakllEEQNefXiJa2JXESpKivO_s1Mvm0U8cQ5EMfcWETIePscnZHYx'; // 自分のAPIキーに置き換えてください
+// .envファイルからYelp APIキーを取得
+const apiKey = process.env.YELP_API_KEY;
 
 const options = {
-	method: 'GET',
-	headers: {
-	  'Content-Type': 'application/json',
-	  'Authorization': `Bearer ${apiKey}`
-	},
-	mode: 'cors',
-	credentials: 'include'
-  };
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${apiKey}`
+  },
+  mode: 'cors',
+  credentials: 'include'
+};
 
 window.addEventListener('load', () => {
   if ('geolocation' in navigator) {
