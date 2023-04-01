@@ -1,35 +1,22 @@
-const appId = 'fz_ifOexg668ec3stQVTAJCA9OfmHXsc7OQvcQlSllR1OcD2WowgZUTI7PC.eNw-'; // アプリケーションIDを入力してください
-const options = {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${appId}`
-  },
-  mode: 'cors',
-  credentials: 'include'
-};
+const appId = 'dj00aiZpPThtVTNlWlF5aFdNNCZzPWNvbnN1bWVyc2VjcmV0Jng9MzU-';
+const apiUrl = 'https://map.yahooapis.jp/search/local/V1/localSearch';
 
-window.addEventListener('load', async () => {
-  if ('geolocation' in navigator) {
-    try {
-      const position = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-      const { latitude, longitude } = position.coords;
-      const url = `https://map.yahooapis.jp/search/local/V1/geoCoder?lat=${latitude}&lon=${longitude}&output=json&sort=geo&results=1&detail=simple&appid=${appId}`;
-      const response = await fetch(url, options);
-      const data = await response.json();
-      if (data.ResultInfo.Count > 0) {
-        const storeName = data.Feature[0].Name;
-        const storeNameElem = document.getElementById('store-name');
-        storeNameElem.innerText = storeName;
-      } else {
-        console.log('近くの店舗が見つかりませんでした。');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  } else {
-    console.error('このブラウザではジオロケーションがサポートされていません。');
-  }
+// 現在地の緯度経度を取得する
+navigator.geolocation.getCurrentPosition(function(position) {
+  const latitude = position.coords.latitude;
+  const longitude = position.coords.longitude;
+
+  // Yahoo!地図APIにリクエストを送信する
+  const requestUrl = apiUrl + '?appid=' + appId + '&lat=' + latitude + '&lon=' + longitude + '&sort=dist';
+  fetch(requestUrl)
+    .then(response => response.text())
+    .then(data => {
+      // レスポンスから一番近いお店の名前を取得する
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data, 'text/xml');
+      const firstResult = xmlDoc.getElementsByTagName('Result')[0];
+      const name = firstResult.getElementsByTagName('Name')[0].childNodes[0].nodeValue;
+      console.log('一番近いお店の名前は ' + name + ' です。');
+    })
+    .catch(error => console.log(error));
 });
