@@ -7,9 +7,13 @@ window.addEventListener('load', async () => {
 		  try {
 			const response = await fetch(url);
 			const data = await response.json();
-			const storeName = data.elements[0].tags.name || 'Unknown';
-			const storeNameElem = document.getElementById('store-name');
-			storeNameElem.innerText = storeName;
+			if (data.elements.length > 0) {
+			  const storeName = data.elements[0].tags.name || 'Unknown';
+			  const storeNameElem = document.getElementById('store-name');
+			  storeNameElem.innerText = storeName;
+			} else {
+			  console.error('No shops found in the area');
+			}
 		  } catch (error) {
 			console.error(error);
 		  }
