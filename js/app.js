@@ -3,7 +3,7 @@ window.addEventListener('load', async () => {
 	  navigator.geolocation.getCurrentPosition(
 		async (position) => {
 		  const { coords: { latitude, longitude } } = position;
-		  const url = `https://overpass-api.de/api/interpreter?data=[out:json];node(around:5000,${latitude},${longitude})[shop];out tags;`;
+		  const url = `https://overpass-api.de/api/interpreter?data=[out:json];node(around:100,${latitude},${longitude})[shop];out tags;`;
 		  try {
 			const response = await fetch(url);
 			const data = await response.json();
